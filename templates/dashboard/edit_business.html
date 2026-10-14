@@ -1,0 +1,23 @@
+{% extends "dashboard/_shell.html" %}
+{% block title %}Edit Business — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+  <form method="post" enctype="multipart/form-data" class="biz-card p-4">
+    {% csrf_token %}
+    <div class="row">
+      {% for field in form %}
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn-amber">Save changes</button>
+  </form>
+  <style>
+    form input, form select, form textarea {
+      width:100%; padding:0.55rem 0.75rem; border:1px solid var(--line);
+      border-radius:8px; font-family:var(--font-body);
+    }
+  </style>
+{% endblock %}

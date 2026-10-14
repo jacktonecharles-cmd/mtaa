@@ -1,0 +1,33 @@
+{% extends "dashboard/_shell.html" %}
+{% block title %}Photos — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+  <div class="biz-card p-4 mb-4">
+    <h3 style="font-size:1.05rem;">Upload a photo</h3>
+    <form method="post" enctype="multipart/form-data" class="row g-2 align-items-end">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="col-md-5">
+          <label class="form-label small fw-semibold">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+      <div class="col-md-2"><button type="submit" class="btn-amber w-100">Upload</button></div>
+    </form>
+  </div>
+
+  <div class="row g-3">
+    {% for photo in photos %}
+      <div class="col-4 col-md-3">
+        <div class="biz-card p-2">
+          <img src="{{ photo.image.url }}" alt="{{ photo.caption }}" style="width:100%; height:90px; object-fit:cover; border-radius:8px;">
+          <a href="{% url 'dashboard:photo_delete' photo.id %}" class="text-danger small d-block mt-1" onclick="return confirm('Remove this photo?');">Remove</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="empty-state">No photos uploaded yet.</div>
+    {% endfor %}
+  </div>
+  <style>
+    form input, form select, form textarea { width:100%; padding:0.5rem 0.7rem; border:1px solid var(--line); border-radius:8px; }
+  </style>
+{% endblock %}

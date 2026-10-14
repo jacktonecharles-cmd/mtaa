@@ -1,0 +1,11 @@
+{% extends "accounts/_form_page.html" %}
+{% block title %}Upgrade to {{ plan.name }} — MtaaBiz Kenya{% endblock %}
+{% block form_eyebrow %}{{ business.name }}{% endblock %}
+{% block form_title %}Upgrade to {{ plan.name }}{% endblock %}
+{% block form_submit_label %}Submit upgrade request{% endblock %}
+{% block form_footer %}
+  <p class="mt-3 small">
+    KSh {{ plan.price_ksh_per_month|floatformat:0 }}/month. Pay via M-Pesa to our paybill (details sent after
+    submission) and enter the transaction code above, or leave it blank and follow up with an admin.
+  </p>
+{% endblock %}

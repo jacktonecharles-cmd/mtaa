@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}MtaaBiz Kenya — Find trusted businesses near you.{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow" style="color:#9fd6cc;">Kisumu &middot; and growing</span>
+    <h1 class="mt-2 mb-3">Find Businesses Near You</h1>
+    <p class="lead-sub">Discover trusted businesses, services and shops across Kenya.</p>
+
+    <form class="search-board d-flex flex-column flex-md-row align-items-stretch align-items-md-center" action="#" method="get">
+      <div class="field flex-grow-1">
+        <label class="field-label" for="q">What are you looking for</label>
+        <input type="text" id="q" name="q" placeholder="e.g. barber, restaurant, plumber&hellip;">
+      </div>
+      <div class="divider d-none d-md-block"></div>
+      <div class="field flex-grow-1">
+        <label class="field-label" for="category">Category</label>
+        <select id="category" name="category">
+          <option value="">All categories</option>
+          {% for category in categories %}
+            <option value="{{ category.slug }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="divider d-none d-md-block"></div>
+      <div class="field flex-grow-1">
+        <label class="field-label" for="location">Location</label>
+        <select id="location" name="location">
+          <option value="">All of Kisumu</option>
+          {% for area in areas %}
+            <option value="{{ area.slug }}">{{ area.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn-amber mt-3 mt-md-0 ms-md-2">
+        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- POPULAR CATEGORIES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Browse</span>
+      <h2>Popular categories</h2>
+      <p>From barbers to builders — find the right business for the job.</p>
+    </div>
+
+    {% if categories %}
+      <div class="category-rail">
+        {% for category in categories %}
+          <a href="#" class="category-card">
+            <span class="icon"><i class="{{ category.icon|default:'fa-solid fa-shop' }}"></i></span>
+            <span class="cat-name">{{ category.name }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="eyebrow">No categories yet</span>
+        Add categories from the Django admin under <strong>Categories</strong> to see them here.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- FEATURED BUSINESSES -->
+<section class="section" style="background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Handpicked</span>
+      <h2>Featured businesses</h2>
+      <p>Top placement, reserved for MtaaBiz Featured members.</p>
+    </div>
+
+    {% if featured_businesses %}
+      <div class="row g-4">
+        {% for business in featured_businesses %}
+          <div class="col-sm-6 col-lg-3">
+            {% include "core/_business_card.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="eyebrow">No featured businesses yet</span>
+        Once businesses are approved and marked "Featured" in the admin, they'll appear here.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- POPULAR BUSINESSES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Trending</span>
+      <h2>Popular businesses</h2>
+      <p>The best-rated businesses on MtaaBiz right now.</p>
+    </div>
+
+    {% if popular_businesses %}
+      <div class="row g-4">
+        {% for business in popular_businesses %}
+          <div class="col-sm-6 col-lg-3">
+            {% include "core/_business_card.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="eyebrow">No businesses yet</span>
+        Approved businesses with reviews will show up here, ranked by rating.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- BROWSE BY LOCATION -->
+<section class="section" style="background:var(--white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Kisumu &amp; beyond</span>
+      <h2>Browse by location</h2>
+      <p>We're starting in Kisumu — every town and county is on the way.</p>
+    </div>
+
+    {% if areas %}
+      <div class="d-flex flex-wrap gap-2">
+        {% for area in areas %}
+          <a href="#" class="location-pill"><i class="fa-solid fa-location-dot"></i> {{ area.name }}</a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="eyebrow">No locations yet</span>
+        Add counties, towns and areas from the Django admin under <strong>Locations</strong>.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Simple by design</span>
+      <h2>How it works</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="step">
+          <span class="num">01</span>
+          <div>
+            <h4>Search</h4>
+            <p>Tell us what you need and where — a barber in Kondele, a caterer in the CBD.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step">
+          <span class="num">02</span>
+          <div>
+            <h4>Compare</h4>
+            <p>Check ratings, prices, and photos side by side to find the right fit.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step">
+          <span class="num">03</span>
+          <div>
+            <h4>Contact</h4>
+            <p>Call, WhatsApp, or get directions — straight from the business profile.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR BUSINESS OWNERS -->
+<section class="section pb-5">
+  <div class="container">
+    <div class="owner-cta">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <span class="eyebrow" style="color:#bfe6df;">For business owners</span>
+          <h2 class="mt-2 mb-2">Get your business discovered by more customers.</h2>
+          <p class="mb-0">List your business for free, then upgrade for premium placement and more visibility.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="#" class="btn-amber d-inline-block">List Your Business</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

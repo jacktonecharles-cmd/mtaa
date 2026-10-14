@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Pricing — MtaaBiz Kenya{% endblock %}
+{% block content %}
+<section class="section" style="padding-top:2.5rem;">
+  <div class="container">
+    <span class="eyebrow">For business owners</span>
+    <h1 class="mt-2 mb-4" style="font-size:1.9rem;">Simple, transparent pricing</h1>
+    <div class="row g-3">
+      {% for plan in plans %}
+        <div class="col-md-4">
+          <div class="biz-card p-4 h-100 d-flex flex-column">
+            <h3 style="font-size:1.15rem;">{{ plan.name }}</h3>
+            <div class="biz-rating mb-3" style="font-size:1.4rem;">KSh {{ plan.price_ksh_per_month|floatformat:0 }}<span class="small" style="color:var(--ink-soft); font-weight:500;">/mo</span></div>
+            <ul class="flex-grow-1" style="color:var(--ink-soft);">
+              {% for feature in plan.feature_list %}<li>{{ feature }}</li>{% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="mt-3 small" style="color:var(--ink-soft);">Manage your plan from your business dashboard once you've listed a business.</p>
+  </div>
+</section>
+{% endblock %}

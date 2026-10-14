@@ -1,0 +1,28 @@
+{% extends "dashboard/_shell.html" %}
+{% block title %}Reviews — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+  {% for review in reviews %}
+    <div class="biz-card p-3 mb-2">
+      <div class="d-flex justify-content-between">
+        <strong>{{ review.user.username }}</strong>
+        <span class="biz-rating"><i class="fa-solid fa-star"></i> {{ review.rating }}</span>
+      </div>
+      <p class="small mb-1" style="color:var(--ink-soft);">{{ review.created_at|date:"M j, Y" }}</p>
+      {% if review.comment %}<p class="mb-2">{{ review.comment }}</p>{% endif %}
+
+      {% if review.owner_response %}
+        <div class="ps-3" style="border-left:3px solid var(--lake);">
+          <p class="mb-0 small"><strong>Your response:</strong> {{ review.owner_response }}</p>
+        </div>
+      {% else %}
+        <form method="post" action="{% url 'reviews:respond' review.id %}" class="d-flex gap-2 mt-2">
+          {% csrf_token %}
+          <input type="text" name="owner_response" placeholder="Write a response..." style="flex:1; border:1px solid var(--line); border-radius:8px; padding:0.35rem 0.6rem;">
+          <button type="submit" class="btn-list-business" style="background:var(--ink);">Reply</button>
+        </form>
+      {% endif %}
+    </div>
+  {% empty %}
+    <div class="empty-state">No reviews yet.</div>
+  {% endfor %}
+{% endblock %}

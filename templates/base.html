@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MtaaBiz Kenya — Find trusted businesses near you.{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Discover trusted businesses, services and shops across Kenya, starting in Kisumu.{% endblock %}">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 (layout grid/utilities only — components are custom-styled) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mb-navbar">
+  <div class="container">
+    <a class="navbar-brand brand" href="{% url 'core:home' %}">Mtaa<span class="brand-dot">Biz</span> Kenya</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'core:home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'businesses:list' %}">Explore</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'categories:list' %}">Categories</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'locations:list' %}">Locations</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'core:about' %}">About</a></li>
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'dashboard:overview' %}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-custom" href="{% url 'favorites:list' %}">Favorites</a></li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0"><a class="btn-list-business d-inline-block" href="{% url 'businesses:register' %}">List Your Business</a></li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="nav-link nav-link-custom border-0 bg-transparent">Logout</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0"><a class="btn-list-business d-inline-block" href="{% url 'businesses:register' %}">List Your Business</a></li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0"><a class="nav-link nav-link-custom" href="{% url 'accounts:login' %}">Login</a> / <a class="nav-link nav-link-custom d-inline" href="{% url 'accounts:register' %}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<footer class="mb-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="brand mb-2">Mtaa<span style="color:var(--amber)">Biz</span> Kenya</div>
+        <p class="fine">Find trusted businesses near you. Starting in Kisumu, built for every county.</p>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Company</h6>
+        <ul class="list-unstyled d-flex flex-column gap-2">
+          <li><a href="{% url 'core:about' %}">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Explore</h6>
+        <ul class="list-unstyled d-flex flex-column gap-2">
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">Locations</a></li>
+          <li><a href="#">Featured Businesses</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Business Owners</h6>
+        <ul class="list-unstyled d-flex flex-column gap-2">
+          <li><a href="{% url 'businesses:register' %}">List Your Business</a></li>
+          <li><a href="{% url 'subscriptions:pricing' %}">Pricing</a></li>
+          <li><a href="#">Advertising</a></li>
+          <li><a href="{% url 'dashboard:overview' %}">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Social</h6>
+        <ul class="list-unstyled d-flex flex-column gap-2">
+          <li><a href="#"><i class="fa-brands fa-facebook me-1"></i>Facebook</a></li>
+          <li><a href="#"><i class="fa-brands fa-instagram me-1"></i>Instagram</a></li>
+          <li><a href="#"><i class="fa-brands fa-tiktok me-1"></i>TikTok</a></li>
+          <li><a href="#"><i class="fa-brands fa-x-twitter me-1"></i>X</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <p class="fine mb-0">&copy; {% now "Y" %} MtaaBiz Kenya. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

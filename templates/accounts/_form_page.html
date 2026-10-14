@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section" style="padding-top:3rem; min-height:60vh;">
+  <div class="container" style="max-width:{% block form_max_width %}460px{% endblock %};">
+    <span class="eyebrow">{% block form_eyebrow %}{% endblock %}</span>
+    <h1 class="mt-2 mb-4" style="font-size:1.9rem;">{% block form_title %}{% endblock %}</h1>
+
+    {% if form.non_field_errors %}
+      {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      {% for error in form.non_field_errors %}<div class="text-danger small mb-2">{{ error }}</div>{% endfor %}
+      <button type="submit" class="btn-amber w-100">{% block form_submit_label %}Submit{% endblock %}</button>
+    </form>
+
+    {% block form_footer %}{% endblock %}
+  </div>
+</section>
+<style>
+  form input, form select, form textarea {
+    width:100%; padding:0.6rem 0.8rem; border:1px solid var(--line);
+    border-radius:10px; font-family:var(--font-body);
+  }
+  form input:focus, form select:focus, form textarea:focus {
+    outline:2px solid var(--lake); border-color:var(--lake);
+  }
+</style>
+{% endblock %}

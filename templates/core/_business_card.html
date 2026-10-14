@@ -1,0 +1,22 @@
+<a href="#" class="biz-card d-block text-decoration-none">
+  <div class="thumb">
+    {% if business.logo %}
+      <img src="{{ business.logo.url }}" alt="{{ business.name }}" style="width:100%;height:100%;object-fit:cover;">
+    {% else %}
+      <i class="fa-solid fa-store"></i>
+    {% endif %}
+    <div class="badge-row">
+      {% if business.is_featured %}<span class="badge-pill badge-featured">Featured</span>{% endif %}
+      {% if business.is_premium %}<span class="badge-pill badge-premium">Premium</span>{% endif %}
+      {% if business.is_verified %}<span class="badge-pill badge-verified">Verified</span>{% endif %}
+    </div>
+  </div>
+  <div class="body">
+    <div class="biz-name">{{ business.name }}</div>
+    <div class="biz-meta">{{ business.category.name }} &middot; {{ business.town.name }}</div>
+    <div class="biz-rating mt-2">
+      <i class="fa-solid fa-star"></i> {{ business.average_rating }}
+      <span style="color:var(--ink-soft); font-weight:500;">({{ business.review_count }})</span>
+    </div>
+  </div>
+</a>

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}{{ business.name }} — MtaaBiz Kenya{% endblock %}
+{% block meta_description %}{{ business.description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+
+{% if not business.is_approved %}
+  <div class="container mt-3">
+    <div class="alert alert-warning">
+      This listing is <strong>{{ business.get_approval_status_display }}</strong> and only visible to you because you're the owner (or staff).
+    </div>
+  </div>
+{% endif %}
+
+<!-- Cover -->
+<div style="height:220px; background:linear-gradient(135deg, var(--lake-tint), var(--paper-dim)); position:relative;">
+  {% if business.cover_image %}
+    <img src="{{ business.cover_image.url }}" alt="" style="width:100%; height:100%; object-fit:cover;">
+  {% endif %}
+</div>
+
+<div class="container" style="margin-top:-56px; position:relative; z-index:2;">
+  <div class="d-flex flex-column flex-md-row align-items-md-end gap-3 mb-4">
+    <div style="width:112px; height:112px; border-radius:18px; background:var(--white); border:4px solid var(--white); box-shadow:var(--shadow-card); overflow:hidden; flex:0 0 auto; display:flex; align-items:center; justify-content:center;">
+      {% if business.logo %}
+        <img src="{{ business.logo.url }}" alt="{{ business.name }}" style="width:100%; height:100%; object-fit:cover;">
+      {% else %}
+        <i class="fa-solid fa-store" style="font-size:2rem; color:var(--lake);"></i>
+      {% endif %}
+    </div>
+    <div class="flex-grow-1">
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <h1 class="mb-0" style="font-size:1.75rem;">{{ business.name }}</h1>
+        {% if business.is_verified %}<span class="badge-pill badge-verified">Verified</span>{% endif %}
+        {% if business.is_premium %}<span class="badge-pill badge-premium">Premium</span>{% endif %}
+        {% if business.is_featured %}<span class="badge-pill badge-featured">Featured</span>{% endif %}
+      </div>
+      <p class="mb-0" style="color:var(--ink-soft);">
+        {{ business.category.name }} &middot; {{ business.area.name|default:"" }}{% if business.area %}, {% endif %}{{ business.town.name }}
+        &middot; <span class="biz-rating"><i class="fa-solid fa-star"></i> {{ business.average_rating }} ({{ business.review_count }} review{{ business.review_count|pluralize }})</span>
+      </p>
+    </div>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'favorites:toggle' business.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn-list-business" style="background:{% if is_favorited %}var(--clay){% else %}var(--ink){% endif %};">
+          <i class="fa-{% if is_favorited %}solid{% else %}regular{% endif %} fa-heart me-1"></i>
+          {% if is_favorited %}Saved{% else %}Save{% endif %}
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  <!-- CTA buttons -->
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    {% if business.phone_number %}
+      <a href="tel:{{ business.phone_number }}" class="btn-amber" onclick="mbTrack('phone')"><i class="fa-solid fa-phone me-1"></i> Call Now</a>
+    {% endif %}
+    {% if business.whatsapp_number %}
+      <a href="https://wa.me/{{ business.whatsapp_number }}" target="_blank" rel="noopener" class="btn-list-business" style="background:#25D366;" onclick="mbTrack('whatsapp')"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</a>
+    {% endif %}
+    {% if business.latitude and business.longitude %}
+      <a href="https://www.google.com/maps/search/?api=1&query={{ business.latitude }},{{ business.longitude }}" target="_blank" rel="noopener" class="btn-list-business" style="background:var(--lake);"><i class="fa-solid fa-location-dot me-1"></i> Get Directions</a>
+    {% endif %}
+    {% if business.website %}
+      <a href="{{ business.website }}" target="_blank" rel="noopener" class="btn-list-business" style="background:var(--ink);" onclick="mbTrack('website')"><i class="fa-solid fa-globe me-1"></i> Website</a>
+    {% endif %}
+    <a href="#reviews" class="btn-list-business" style="background:var(--white); color:var(--ink) !important; border:1px solid var(--line);"><i class="fa-regular fa-star me-1"></i> Leave a Review</a>
+  </div>
+
+  <div class="row g-5">
+    <div class="col-lg-8">
+      {% if business.description %}
+        <h2 style="font-size:1.3rem;">About</h2>
+        <p>{{ business.description|linebreaksbr }}</p>
+      {% endif %}
+
+      {% if business.services.all %}
+        <h2 style="font-size:1.3rem;" class="mt-4">Services &amp; prices</h2>
+        <div class="row g-3">
+          {% for service in business.services.all %}
+            <div class="col-sm-6">
+              <div class="biz-card p-3">
+                <div class="d-flex justify-content-between">
+                  <strong>{{ service.name }}</strong>
+                  {% if service.price %}<span class="biz-rating">KSh {{ service.price|floatformat:0 }}</span>{% endif %}
+                </div>
+                {% if service.description %}<p class="small mb-0 mt-1">{{ service.description }}</p>{% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if business.photos.all %}
+        <h2 style="font-size:1.3rem;" class="mt-4">Photos</h2>
+        <div class="row g-2">
+          {% for photo in business.photos.all %}
+            <div class="col-4 col-md-3">
+              <img src="{{ photo.image.url }}" alt="{{ photo.caption }}" style="width:100%; height:100px; object-fit:cover; border-radius:10px;">
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Reviews -->
+      <h2 id="reviews" style="font-size:1.3rem;" class="mt-5">Customer reviews</h2>
+
+      {% if user.is_authenticated and not is_owner %}
+        <form method="post" action="{% url 'reviews:add' business.id %}" class="biz-card p-3 mb-4">
+          {% csrf_token %}
+          <div class="d-flex gap-3 flex-wrap align-items-end">
+            <div>
+              <label class="field-label d-block">Your rating</label>
+              <select name="rating" style="border:1px solid var(--line); border-radius:8px; padding:0.4rem;">
+                {% for i in "54321" %}<option value="{{ i }}" {% if user_review.rating == i|add:0 %}selected{% endif %}>{{ i }} star{{ i|pluralize }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="flex-grow-1" style="min-width:200px;">
+              <label class="field-label d-block">Comment</label>
+              <input type="text" name="comment" value="{{ user_review.comment|default:'' }}" style="width:100%; border:1px solid var(--line); border-radius:8px; padding:0.4rem 0.6rem;" placeholder="Share your experience...">
+            </div>
+            <button type="submit" class="btn-amber">{% if user_review %}Update review{% else %}Post review{% endif %}</button>
+          </div>
+        </form>
+      {% elif not user.is_authenticated %}
+        <p><a href="{% url 'accounts:login' %}?next={{ request.path }}" style="color:var(--lake); font-weight:600;">Log in</a> to leave a review.</p>
+      {% endif %}
+
+      {% for review in reviews %}
+        <div class="mb-3 pb-3" style="border-bottom:1px solid var(--line);">
+          <div class="d-flex justify-content-between">
+            <strong>{{ review.user.username }}</strong>
+            <span class="biz-rating"><i class="fa-solid fa-star"></i> {{ review.rating }}</span>
+          </div>
+          <p class="mb-1 small" style="color:var(--ink-soft);">{{ review.created_at|date:"M j, Y" }}</p>
+          {% if review.comment %}<p class="mb-2">{{ review.comment }}</p>{% endif %}
+          {% if review.owner_response %}
+            <div class="ps-3" style="border-left:3px solid var(--lake);">
+              <p class="mb-0 small"><strong>Response from {{ business.name }}:</strong> {{ review.owner_response }}</p>
+            </div>
+          {% elif is_owner %}
+            <form method="post" action="{% url 'reviews:respond' review.id %}" class="mt-2 d-flex gap-2">
+              {% csrf_token %}
+              <input type="text" name="owner_response" placeholder="Write a response..." style="flex:1; border:1px solid var(--line); border-radius:8px; padding:0.35rem 0.6rem;">
+              <button type="submit" class="btn-list-business" style="background:var(--ink);">Reply</button>
+            </form>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p style="color:var(--ink-soft);">No reviews yet — be the first to share your experience.</p>
+      {% endfor %}
+    </div>
+
+    <div class="col-lg-4">
+      <div class="biz-card p-3 mb-3">
+        <h3 style="font-size:1.05rem;">Details</h3>
+        {% if business.opening_hours %}
+          <p class="small mb-2"><i class="fa-regular fa-clock me-1" style="color:var(--lake);"></i> {{ business.opening_hours|linebreaksbr }}</p>
+        {% endif %}
+        {% if business.address %}
+          <p class="small mb-2"><i class="fa-solid fa-location-dot me-1" style="color:var(--lake);"></i> {{ business.address }}</p>
+        {% endif %}
+        {% if business.phone_number %}
+          <p class="small mb-2"><i class="fa-solid fa-phone me-1" style="color:var(--lake);"></i> {{ business.phone_number }}</p>
+        {% endif %}
+        {% if business.email %}
+          <p class="small mb-0"><i class="fa-regular fa-envelope me-1" style="color:var(--lake);"></i> {{ business.email }}</p>
+        {% endif %}
+      </div>
+
+      {% if business.facebook_url or business.instagram_url or business.tiktok_url or business.twitter_url %}
+        <div class="biz-card p-3 mb-3">
+          <h3 style="font-size:1.05rem;">Follow</h3>
+          <div class="d-flex gap-3">
+            {% if business.facebook_url %}<a href="{{ business.facebook_url }}" target="_blank" rel="noopener" style="color:var(--lake); font-size:1.2rem;"><i class="fa-brands fa-facebook"></i></a>{% endif %}
+            {% if business.instagram_url %}<a href="{{ business.instagram_url }}" target="_blank" rel="noopener" style="color:var(--lake); font-size:1.2rem;"><i class="fa-brands fa-instagram"></i></a>{% endif %}
+            {% if business.tiktok_url %}<a href="{{ business.tiktok_url }}" target="_blank" rel="noopener" style="color:var(--lake); font-size:1.2rem;"><i class="fa-brands fa-tiktok"></i></a>{% endif %}
+            {% if business.twitter_url %}<a href="{{ business.twitter_url }}" target="_blank" rel="noopener" style="color:var(--lake); font-size:1.2rem;"><i class="fa-brands fa-x-twitter"></i></a>{% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if similar_businesses %}
+        <div class="biz-card p-3">
+          <h3 style="font-size:1.05rem;">Similar businesses</h3>
+          {% for s in similar_businesses %}
+            <a href="{{ s.get_absolute_url }}" class="d-block small mb-2" style="color:var(--ink);">{{ s.name }} <span style="color:var(--ink-soft);">&middot; {{ s.town.name }}</span></a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+function mbTrack(kind) {
+  fetch("{% url 'businesses:track_click' business.id 'PLACEHOLDER' %}".replace('PLACEHOLDER', kind), {
+    method: "POST",
+    headers: {"X-CSRFToken": "{{ csrf_token }}"},
+    keepalive: true
+  });
+}
+</script>
+{% endblock %}

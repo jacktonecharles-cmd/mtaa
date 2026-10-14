@@ -1,0 +1,8 @@
+{% extends "accounts/_form_page.html" %}
+{% block title %}Register — MtaaBiz Kenya{% endblock %}
+{% block form_eyebrow %}Join MtaaBiz{% endblock %}
+{% block form_title %}Create your account{% endblock %}
+{% block form_submit_label %}Create account{% endblock %}
+{% block form_footer %}
+  <p class="mt-3 small">Already have an account? <a href="{% url 'accounts:login' %}" style="color:var(--lake); font-weight:600;">Log in</a></p>
+{% endblock %}

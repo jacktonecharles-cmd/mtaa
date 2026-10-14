@@ -1,0 +1,21 @@
+{% extends "dashboard/_shell.html" %}
+{% block title %}Advertise — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+  <a href="{% url 'advertisements:request' business.id %}" class="btn-amber d-inline-block mb-4">Request a new advertisement</a>
+
+  {% for ad in ads %}
+    <div class="biz-card p-3 mb-2">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <strong>{{ ad.title }}</strong>
+          <p class="small mb-0" style="color:var(--ink-soft);">{{ ad.get_placement_display }} &middot; {{ ad.start_date }} to {{ ad.end_date }}</p>
+        </div>
+        <span class="badge-pill" style="background:{% if ad.is_approved %}var(--lake){% else %}var(--amber){% endif %}; color:{% if ad.is_approved %}var(--white){% else %}var(--ink){% endif %};">
+          {% if ad.is_approved %}Approved{% else %}Pending review{% endif %}
+        </span>
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty-state">No advertisements yet.</div>
+  {% endfor %}
+{% endblock %}

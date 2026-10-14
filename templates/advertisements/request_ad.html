@@ -1,0 +1,9 @@
+{% extends "accounts/_form_page.html" %}
+{% block title %}Request an Ad — {{ business.name }}{% endblock %}
+{% block form_eyebrow %}{{ business.name }}{% endblock %}
+{% block form_title %}Request an advertisement{% endblock %}
+{% block form_max_width %}560px{% endblock %}
+{% block form_submit_label %}Submit for review{% endblock %}
+{% block form_footer %}
+  <p class="mt-3 small">Ads go live after an admin approves them.</p>
+{% endblock %}

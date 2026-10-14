@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Locations — MtaaBiz Kenya{% endblock %}
+{% block content %}
+<section class="section" style="padding-top:2.5rem;">
+  <div class="container">
+    <span class="eyebrow">Browse</span>
+    <h1 class="mt-2 mb-4" style="font-size:1.9rem;">Browse by location</h1>
+
+    {% for county in counties %}
+      <h2 style="font-size:1.15rem;" class="mb-2">{{ county.name }}</h2>
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        {% for town in county.towns.all %}
+          <a href="{% url 'locations:detail' town.slug %}" class="location-pill"><i class="fa-solid fa-city"></i> {{ town.name }}</a>
+          {% for area in town.areas.all %}
+            <a href="{% url 'locations:detail' area.slug %}" class="location-pill"><i class="fa-solid fa-location-dot"></i> {{ area.name }}</a>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% empty %}
+      <div class="empty-state">
+        <span class="eyebrow">No locations yet</span>
+        Add counties, towns and areas from the Django admin.
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

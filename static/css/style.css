@@ -1,0 +1,367 @@
+/* =========================================================================
+   MtaaBiz Kenya — design tokens & components
+   Concept: the visual language of a Kisumu shopping street — painted
+   kiosk signboards, route-board lettering, market stall price tags —
+   translated into a clean, modern directory UI.
+   ========================================================================= */
+
+:root {
+  /* Palette */
+  --ink: #12292c;          /* near-black teal, headings & dark sections */
+  --lake: #0e6e64;         /* Lake Victoria teal — primary */
+  --lake-dark: #0a4f49;    /* pressed / hover state */
+  --lake-tint: #e4f2ef;    /* pale teal for surfaces */
+  --amber: #e8a33d;        /* marigold / matatu-signboard accent — CTAs */
+  --amber-dark: #c8842a;
+  --clay: #b5482e;         /* baked-clay red — used sparingly (featured) */
+  --paper: #faf6ea;        /* warm paper background */
+  --paper-dim: #f1ead9;
+  --white: #ffffff;
+  --ink-soft: #3f5457;     /* body text on paper */
+  --line: #e3dcc9;         /* hairline borders on paper */
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", -apple-system, Segoe UI, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-card: 0 1px 2px rgba(18, 41, 44, 0.06), 0 8px 24px -12px rgba(18, 41, 44, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+a { text-decoration: none; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lake);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------
+   Navbar
+   --------------------------------------------------------------------- */
+.mb-navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.mb-navbar .brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+.mb-navbar .brand .brand-dot { color: var(--amber); }
+.mb-navbar .nav-link-custom {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+}
+.mb-navbar .nav-link-custom:hover { color: var(--lake); background: var(--lake-tint); }
+.btn-list-business {
+  background: var(--ink);
+  color: var(--white) !important;
+  font-weight: 700;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+}
+.btn-list-business:hover { background: var(--lake-dark); }
+
+/* ---------------------------------------------------------------------
+   Hero — signboard search bar
+   --------------------------------------------------------------------- */
+.hero {
+  background: radial-gradient(1100px 500px at 18% -10%, #16403c 0%, var(--ink) 55%, #0c1f21 100%);
+  color: var(--white);
+  padding: 4.5rem 0 5.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  /* subtle painted-plank texture line at the very bottom of the hero */
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 10px;
+  background: repeating-linear-gradient(90deg, var(--amber) 0 46px, transparent 46px 56px);
+  opacity: 0.9;
+}
+.hero h1 {
+  color: var(--white);
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  line-height: 1.06;
+  max-width: 16ch;
+}
+.hero .lead-sub {
+  color: #cfe4e0;
+  font-size: 1.1rem;
+  max-width: 46ch;
+}
+
+.search-board {
+  background: var(--white);
+  border-radius: 18px;
+  padding: 0.9rem;
+  box-shadow: 0 24px 60px -20px rgba(0,0,0,0.45);
+  margin-top: 2.25rem;
+}
+.search-board .field {
+  padding: 0.55rem 0.9rem;
+}
+.search-board .field-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lake);
+  display: block;
+  margin-bottom: 2px;
+}
+.search-board select,
+.search-board input[type="text"] {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--ink);
+  background: transparent;
+}
+.search-board .divider { width: 1px; background: var(--line); }
+.btn-amber {
+  background: var(--amber);
+  border: none;
+  color: var(--ink);
+  font-weight: 800;
+  border-radius: 12px;
+  padding: 0.7rem 1.6rem;
+  white-space: nowrap;
+}
+.btn-amber:hover { background: var(--amber-dark); color: var(--ink); }
+
+/* ---------------------------------------------------------------------
+   Category chips — route-board style
+   --------------------------------------------------------------------- */
+.category-rail {
+  display: flex;
+  gap: 0.9rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+}
+.category-card {
+  flex: 0 0 auto;
+  width: 132px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.1rem 0.8rem;
+  text-align: center;
+  color: var(--ink);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.category-card:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
+  box-shadow: var(--shadow-card);
+  border-color: var(--lake);
+  color: var(--ink);
+}
+.category-card .icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--lake-tint);
+  color: var(--lake);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.6rem;
+  font-size: 1.05rem;
+}
+.category-card .cat-name {
+  font-weight: 700;
+  font-size: 0.86rem;
+  line-height: 1.2;
+}
+
+/* ---------------------------------------------------------------------
+   Section shell
+   --------------------------------------------------------------------- */
+.section { padding: 3.5rem 0; }
+.section-head { margin-bottom: 1.75rem; }
+.section-head h2 { font-size: 1.7rem; margin: 0.15rem 0 0.35rem; }
+.section-head p { color: var(--ink-soft); max-width: 52ch; }
+
+/* ---------------------------------------------------------------------
+   Business cards
+   --------------------------------------------------------------------- */
+.biz-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 100%;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.biz-card:hover { box-shadow: var(--shadow-card); transform: translateY(-2px); }
+.biz-card .thumb {
+  height: 150px;
+  background: linear-gradient(135deg, var(--lake-tint), var(--paper-dim));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lake);
+  font-size: 1.8rem;
+  position: relative;
+}
+.biz-card .badge-row { position: absolute; top: 10px; left: 10px; display: flex; gap: 6px; }
+.badge-pill {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.badge-featured { background: var(--clay); color: var(--white); }
+.badge-premium { background: var(--amber); color: var(--ink); }
+.badge-verified { background: var(--lake); color: var(--white); }
+.biz-card .body { padding: 1rem; }
+.biz-card .biz-name { font-weight: 700; color: var(--ink); font-size: 1rem; margin-bottom: 0.2rem; }
+.biz-card .biz-meta { font-size: 0.82rem; color: var(--ink-soft); }
+.biz-card .biz-rating {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--amber-dark);
+  font-weight: 700;
+}
+
+.empty-state {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--white);
+  color: var(--ink-soft);
+}
+.empty-state .eyebrow { display: block; margin-bottom: 0.4rem; }
+
+/* ---------------------------------------------------------------------
+   Location pills
+   --------------------------------------------------------------------- */
+.location-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.location-pill:hover { border-color: var(--lake); color: var(--lake); }
+.location-pill i { color: var(--amber-dark); }
+
+/* ---------------------------------------------------------------------
+   How it works — numbered, because it's a real sequence
+   --------------------------------------------------------------------- */
+.step {
+  display: flex;
+  gap: 1rem;
+}
+.step .num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--amber-dark);
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.step h4 { font-size: 1.02rem; margin-bottom: 0.2rem; }
+.step p { font-size: 0.9rem; margin: 0; }
+
+/* ---------------------------------------------------------------------
+   Owner CTA band
+   --------------------------------------------------------------------- */
+.owner-cta {
+  background: var(--lake);
+  color: var(--white);
+  border-radius: 22px;
+  padding: 2.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.owner-cta h2 { color: var(--white); }
+.owner-cta p { color: #d8ece8; }
+.owner-cta .btn-amber { color: var(--ink); }
+
+/* ---------------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------------- */
+.mb-footer {
+  background: var(--ink);
+  color: #cfe4e0;
+  padding: 3.5rem 0 1.75rem;
+}
+.mb-footer h6 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8fb3ac;
+  margin-bottom: 0.9rem;
+}
+.mb-footer a { color: #cfe4e0; }
+.mb-footer a:hover { color: var(--amber); }
+.mb-footer .brand { color: var(--white); font-family: var(--font-display); font-size: 1.3rem; }
+.mb-footer hr { border-color: #24494a; margin: 2rem 0 1.25rem; }
+.mb-footer .fine { color: #8fb3ac; font-size: 0.82rem; }
+
+/* Responsive tweaks */
+@media (max-width: 767px) {
+  .search-board .divider { display: none; }
+  .search-board .field { padding: 0.5rem 0.25rem; }
+  .owner-cta { padding: 2rem; border-radius: 16px; }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .category-card, .biz-card { transition: none; }
+}
+
+/* Visible keyboard focus */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
+}

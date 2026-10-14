@@ -1,0 +1,51 @@
+{% extends "dashboard/_shell.html" %}
+{% block title %}Dashboard — {{ business.name }}{% endblock %}
+{% block dashboard_content %}
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="biz-card p-3 text-center">
+        <div class="biz-rating" style="font-size:1.4rem;">{{ analytics.profile_views }}</div>
+        <div class="small" style="color:var(--ink-soft);">Profile views</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="biz-card p-3 text-center">
+        <div class="biz-rating" style="font-size:1.4rem;">{{ analytics.phone_clicks }}</div>
+        <div class="small" style="color:var(--ink-soft);">Phone clicks</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="biz-card p-3 text-center">
+        <div class="biz-rating" style="font-size:1.4rem;">{{ analytics.whatsapp_clicks }}</div>
+        <div class="small" style="color:var(--ink-soft);">WhatsApp clicks</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="biz-card p-3 text-center">
+        <div class="biz-rating" style="font-size:1.4rem;">{{ analytics.website_clicks }}</div>
+        <div class="small" style="color:var(--ink-soft);">Website clicks</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="biz-card p-3">
+        <div class="small" style="color:var(--ink-soft);">Average rating</div>
+        <div class="biz-rating" style="font-size:1.6rem;"><i class="fa-solid fa-star"></i> {{ average_rating }}</div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="biz-card p-3">
+        <div class="small" style="color:var(--ink-soft);">Reviews</div>
+        <div class="biz-rating" style="font-size:1.6rem;">{{ review_count }}</div>
+      </div>
+    </div>
+  </div>
+
+  {% if business.approval_status == "pending" %}
+    <div class="alert alert-warning mt-4">Your listing is pending admin approval and isn't publicly visible yet.</div>
+  {% elif business.approval_status == "rejected" %}
+    <div class="alert alert-danger mt-4">Your listing was rejected. Update your details and it will be re-reviewed.</div>
+  {% endif %}
+{% endblock %}

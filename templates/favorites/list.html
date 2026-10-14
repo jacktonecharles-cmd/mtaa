@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}My Favorites — MtaaBiz Kenya{% endblock %}
+{% block content %}
+<section class="section" style="padding-top:2.5rem;">
+  <div class="container">
+    <span class="eyebrow">Saved</span>
+    <h1 class="mt-2 mb-4" style="font-size:1.9rem;">My favorites</h1>
+
+    {% if favorites %}
+      <div class="row g-4">
+        {% for favorite in favorites %}
+          <div class="col-sm-6 col-lg-3">
+            {% with business=favorite.business %}
+              {% include "core/_business_card.html" %}
+            {% endwith %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="eyebrow">Nothing saved yet</span>
+        Tap "Save" on any business page to add it here.
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

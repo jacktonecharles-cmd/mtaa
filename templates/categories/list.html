@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Categories — MtaaBiz Kenya{% endblock %}
+{% block content %}
+<section class="section" style="padding-top:2.5rem;">
+  <div class="container">
+    <span class="eyebrow">Browse</span>
+    <h1 class="mt-2 mb-4" style="font-size:1.9rem;">All categories</h1>
+    <div class="row g-3">
+      {% for category in categories %}
+        <div class="col-6 col-md-3">
+          <a href="{% url 'categories:detail' category.slug %}" class="category-card d-block" style="width:auto;">
+            <span class="icon"><i class="{{ category.icon|default:'fa-solid fa-shop' }}"></i></span>
+            <span class="cat-name">{{ category.name }}</span>
+            <div class="small mt-1" style="color:var(--ink-soft);">{{ category.business_count }} listing{{ category.business_count|pluralize }}</div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
